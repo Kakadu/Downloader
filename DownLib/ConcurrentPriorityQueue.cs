@@ -9,7 +9,7 @@ namespace DownLib
 	public class ConcurrentPriorityQueue<TValue>
 	{ 
 		private readonly object _syncLock = new object(); 
-		private readonly SortedDictionary<int,Queue<TValue>> _minHeap 
+		private readonly SortedDictionary<int,Queue<TValue>> _innerDic 
 			= new SortedDictionary<int,Queue<TValue>>();
 		
 		public ConcurrentPriorityQueue() {} 
@@ -17,13 +17,14 @@ namespace DownLib
 		public void Enqueue(int priority, TValue value)
 		{ 
 			lock (_syncLock) {
-				if (_minHeap.ContainsKey(priority)) {
-					var v = _minHeap[priority];
+				if (_innerDic.ContainsKey(priority)) {
+					var v = _innerDic[priority];
 					v.Enqueue(value);
 				} else {
-					var v = new Queue<TValue>();
-					v.Enqueue(value);
-					_minHeap.Add(priority, v);
+					var q = new Queue<TValue>();
+					q.Enqueue(value);
+					_innerDic.Add(priority, q);
+					Console.WriteLine("Enqueue        : {0}/{1}", priority, value);
 				}
 			}
 		} 
@@ -33,31 +34,30 @@ namespace DownLib
 			result = default(TValue); 
 			lock (_syncLock) 
 			{ 
-				if (_minHeap.Count > 0) 
+				if (_innerDic.Count > 0) 
 				{ 
-					//int maxkey = _minHeap.Keys[_minHeap.Count-1];
-					int maxkey = _minHeap.Keys.Last();
-					Queue<TValue> values = _minHeap[maxkey];
+					int maxkey = _innerDic.Keys.Last();
+					Queue<TValue> values = _innerDic[maxkey];
 					Debug.Assert(values.Count != 0);
 					result = values.Dequeue();
 					if (values.Count == 0)
-						_minHeap.Remove(maxkey);
-					//_minHeap.Add(maxkey, values);
+						_innerDic.Remove(maxkey);
+					Console.WriteLine("Extracting {0}/{1}",maxkey,result);
 					return true; 
 				} 
 			} 
 			return false; 
 		} 
-		
+
 		public bool TryPeek(out TValue result) 
 		{ 
 			result = default(TValue); 
 			lock (_syncLock) 
 			{ 
-				if (_minHeap.Count > 0) 
+				if (_innerDic.Count > 0) 
 				{ 
-					int maxkey = _minHeap.Keys.Last();
-					Queue<TValue> values = _minHeap[maxkey];
+					int maxkey = _innerDic.Keys.Last();
+					Queue<TValue> values = _innerDic[maxkey];
 					Debug.Assert(values.Count != 0);
 					result = values.Peek();
 					return true; 
@@ -66,13 +66,13 @@ namespace DownLib
 			return false; 
 		} 
 		
-		public void Clear() { lock(_syncLock) _minHeap.Clear(); } 
+		public void Clear() { lock(_syncLock) _innerDic.Clear(); } 
 		
 		public bool IsEmpty { get { return Count == 0; } } 
 		
 		public int Count 
 		{ 
-			get { lock (_syncLock) return _minHeap.Count; } 
+			get { lock (_syncLock) return _innerDic.Count; } 
 		} 
 
 		bool IsSynchronized { get { return true; } } 

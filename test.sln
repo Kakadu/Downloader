@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{406750B5-1BD0-4A84-90C0-EB83E14BD0FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownLib", "..\..\..\..\..\prog\xamarin\down1\DownLib\DownLib.csproj", "{51D7DB0E-FA19-4EDD-A04C-40EB9FF07897}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownLib", "DownLib\DownLib.csproj", "{51D7DB0E-FA19-4EDD-A04C-40EB9FF07897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

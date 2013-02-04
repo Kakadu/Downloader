@@ -14,16 +14,17 @@ namespace test {
 					String.Format ("http://thumbs.wallbase.cc/rozne/thumb-{0}.jpg", 43795 + i);
 				targets.Add (url);
 			}
-
-			foreach (var url in targets) {
-				loader.addTarget (url);
+			loader.clearDiskCache();
+			for (int i=0; i<10; i++) {
+				loader.addTarget (targets[i],(i+1)/2);
 			}
+			/*
 			System.Threading.Thread.Sleep(2000);
 			Console.WriteLine("");
-			foreach (var url in targets) {
-				loader.addTarget (url);
+			for (int i=0; i<10; i++) {
+				loader.addTarget (targets[i],5);
 			}
-
+*/
 			while (true) {
 				System.Threading.Thread.Sleep(1000);
 			}
