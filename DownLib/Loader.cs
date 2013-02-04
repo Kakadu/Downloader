@@ -7,22 +7,15 @@ using System.Net;
 namespace DownLib {
 	public class Loader {
 		private static string CACHE_STR = "./Cache";
-		//private static Loader _loader;
+
 		private int _threadCount;
 		private readonly int MAX_THREAD_COUNT;
 		private ShortDictionary<string, byte[]> _dic;
 		public delegate void ItemFinishedDelegate(string url, byte[] data);
-		//ConcurrentQueue<string> _queue;
+
 		ConcurrentPriorityQueue<string> _queue;
 		public event ItemFinishedDelegate ItemFinished;
-		/*
-		public static Loader Instance { 
-			get { 
-				if (_loader == null)
-					_loader = new Loader();
-				return _loader; 
-			} 
-		}*/
+
 		public Loader(int threadsN) {
 			MAX_THREAD_COUNT = threadsN;
 			_threadCount = 0;
